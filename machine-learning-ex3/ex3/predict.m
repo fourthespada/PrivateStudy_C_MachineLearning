@@ -21,13 +21,25 @@ p = zeros(size(X, 1), 1);
 %       can use max(A, [], 2) to obtain the max for each row.
 %
 
+% add ones to each row
+X = [ones(size(X,1),1) X];
 
+% calculate first hidden layer for all m - 
+% produce a matrix of theta1*a1 for all m - m by size(a2)
+% X - m by n
+% Theta1 - size(a2) by n
+A2 = sigmoid(X * Theta1');
 
+A2 = [ones(size(A2,1),1) A2];
 
+% calculate the second layer - output classifiers
+% produce a matrix of theta2*a2 for all m - m by size(a3)
+% size(a3) equals theta2
+A3 = sigmoid(A2 * Theta2');
 
-
-
-
+% collapse the classifiers into single digit output
+% storing the index containing highest probability in each row of p
+[Z, p] = max(A3, [], 2);
 
 % =========================================================================
 
