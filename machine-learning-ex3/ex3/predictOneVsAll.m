@@ -30,13 +30,16 @@ X = [ones(m, 1) X];
 %       for each row.
 %       
 
+% produce m * K matrix - probabilities per classifier
+Y = sigmoid(X * all_theta');
 
+% do not compute 0,1 prediction, we want the maximum
+% Y = Y >= 0.5;
 
-
-
-
+% predictions are the index of the max column value per row
+% return a vector size of m containing the indices
+[Z, p] = max(Y, [], 2);
 
 % =========================================================================
-
 
 end

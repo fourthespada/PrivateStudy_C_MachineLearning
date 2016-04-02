@@ -49,8 +49,22 @@ X = [ones(m, 1) X];
 %                 initial_theta, options);
 %
 
-
-
+% train 1..K classifiers (e.g. digits zero to 9)
+for i = 1:(num_labels)
+    initial_theta = zeros(n+1,1);
+    options = optimset('GradObj', 'on', 'MaxIter', 50);
+    
+    % find minimum of lrCostFunction over theta of i'th classifier
+    % in each pass, we want to find optimal theta of the i'th classifier
+    % y is a vector where y(i) is 1..10
+    % (y == i) is a m-dimensional vector with y(i)=1, y(~i)=0
+    % i'th classifier shall be trained to predict y values equal to i
+    [theta_i] = ...
+        fmincg(@(t)(lrCostFunction(t, X, (y == i), lambda)), ...
+        initial_theta, options);
+    %keyboard
+    all_theta(i,:) = theta_i;
+end
 
 
 

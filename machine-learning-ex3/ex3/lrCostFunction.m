@@ -36,17 +36,24 @@ grad = zeros(size(theta));
 %           grad = grad + YOUR_CODE_HERE (using the temp variable)
 %
 
+% vector of h calculations for all m
+h = sigmoid(X*theta);
 
+% theta array modified for regularization by removing theta(0)
+thetaReg = cat(1, [0], theta(2:end,:));
 
+% vectorized cost calculation
+J = 1/m * sum((-y .* log(h) - ((1-y) .* log(1-h))));
 
+% add regularization to cost
+J = J + (lambda / (2*m)) * (thetaReg' * thetaReg);
 
+% vector of gradients
+grad = (1/m) * (X' * (h - y));
 
-
-
-
-
+% add regularization to gradients
+grad = grad + (lambda / m) * thetaReg;
 % =============================================================
 
 grad = grad(:);
-
 end
