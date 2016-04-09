@@ -47,13 +47,15 @@ Theta2_grad = zeros(size(Theta2));
 %   X - m by n
 %   Theta1 - size(a2) by n
 X = [ones(m, 1) X];
-A2 = sigmoid(X * Theta1');
+Z2 = X * Theta1';
+A2 = sigmoid(Z2);
 
 %   calculate output layer
 %   produce a matrix of theta2*a2 for all m - m by size(a3)
 %   size(A3) equals theta2
 A2 = [ones(size(A2,1),1) A2];
-A3 = sigmoid(A2 * Theta2');
+Z3 = A2 * Theta2';
+A3 = sigmoid(Z3);
 
 %   calculate cost by looking at each classifier
 %   do not collapse classifiers into single digit output
@@ -66,8 +68,9 @@ A3 = sigmoid(A2 * Theta2');
 Y = eye(num_labels);
 Y = Y(y,:); 
  
-% parameter wise multiplication of y and hyp produces a matrix size m by K
+% parameter wise multiplication of Y and hyp produces a matrix size m by K
 % have to sum twice to sum over all K classes and m examples 
+% unregularized
 J = 1/m * sum(sum(-Y .* log(A3) - ((1-Y) .* log(1-A3))));
 
 % add regularization to cost
@@ -76,8 +79,6 @@ Theta2_unbiased = Theta2(:,2:end);
 
 J = J + (lambda / (2*m)) * ... 
     (sum(sum((Theta1_unbiased .^ 2))) + sum(sum((Theta2_unbiased .^ 2))));
-
-%ex3grad = (1/m) * (X' * (h-y));
 
 % Part 2: Implement the backpropagation algorithm to compute the gradients
 %         Theta1_grad and Theta2_grad. You should return the partial derivatives of
@@ -94,6 +95,29 @@ J = J + (lambda / (2*m)) * ...
 %               over the training examples if you are implementing it for the 
 %               first time.
 %
+
+% compute d3 for all examples: d3 is m by K (examples by output units)
+d3 = A3 - Y;
+
+% compute d2 for all examples: d2 is m by h1 (examples by hidden layer units)
+T2_noBias = Theta2(:,2:end);
+d2 = (d3 * T2_noBias) .* sigmoidGradient(Z2);
+
+D2 = d3' * A2;
+D1 = d2' * X;
+
+% these arrays are (n by h1+1) and (h1 by K+1)
+Theta1_grad = D1 ./ m;
+Theta2_grad = D2 ./ m;
+
+% regularization
+T1_regterm = [zeros(hidden_layer_size, 1) Theta1(:,2:end)];
+T2_regterm = [zeros(num_labels, 1) Theta2(:,2:end)];
+T1_regterm = T1_regterm .* (lambda/m);
+T2_regterm = T2_regterm .* (lambda/m);
+Theta1_grad = Theta1_grad + T1_regterm;
+Theta2_grad = Theta2_grad + T2_regterm;
+
 % Part 3: Implement regularization with the cost function and gradients.
 %
 %         Hint: You can implement this around the code for
@@ -101,12 +125,6 @@ J = J + (lambda / (2*m)) * ...
 %               the regularization separately and then add them to Theta1_grad
 %               and Theta2_grad from Part 2.
 %
-
-
-
-
-
-
 
 
 
