@@ -15,8 +15,8 @@ sim = 0;
 %               sigma
 %
 %
-
-
+normsq = sum((x1-x2).^2);
+sim = exp(-normsq/(2*sigma^2));
 
 
 
