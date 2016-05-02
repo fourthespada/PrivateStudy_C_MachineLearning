@@ -21,12 +21,20 @@ idx = zeros(size(X,1), 1);
 % Note: You can use a for-loop over the examples to compute this.
 %
 
-
-
-
-
-
-
+for i=1:size(X,1)
+    cmin = intmax;
+    cminnorm = intmax;
+    for j=1:size(centroids,1)
+        cnorm = X(i,:) - centroids(j,:);
+        cnorm = sqrt(cnorm*cnorm');
+        cnorm = cnorm*cnorm;
+        if(cnorm<cminnorm)
+            cmin = j;
+            cminnorm = cnorm;
+        end
+    end
+    idx(i) = cmin;
+end
 % =============================================================
 
 end
