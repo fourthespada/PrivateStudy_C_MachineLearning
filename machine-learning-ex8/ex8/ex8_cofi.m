@@ -196,7 +196,8 @@ options = optimset('GradObj', 'on', 'MaxIter', 100);
 
 % Set Regularization
 lambda = 10;
-theta = fmincg (@(t)(cofiCostFunc(t, Y, R, num_users, num_movies, ...
+% changed Y to Ynorm per course errata
+theta = fmincg (@(t)(cofiCostFunc(t, Ynorm, R, num_users, num_movies, ...
                                 num_features, lambda)), ...
                 initial_parameters, options);
 
