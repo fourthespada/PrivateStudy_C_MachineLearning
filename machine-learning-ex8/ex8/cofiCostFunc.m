@@ -40,20 +40,24 @@ Theta_grad = zeros(size(Theta));
 %                     partial derivatives w.r.t. to each element of Theta
 %
 
+% P - num_movies x num_users matrix of predictions-error-factor
+P = (X * Theta' - Y);
+P_R = (P .* R);
+
+% double sum of squared error where R(i,j) == 1
+J = (1/2) * sum(sum((P_R) .^ 2));
+
+% X_grad - num_movies by num_features
+X_grad = (P .* R) * Theta;
+
+% Theta_grad - num_users by num_features
+Theta_grad = (P .* R)' * X;
 
 
-
-
-
-
-
-
-
-
-
-
-
-
+% adding in the regularization terms
+J = J + (lambda/2) * (sum(sum((Theta .^ 2))) + sum(sum((X .^ 2))));
+Theta_grad = Theta_grad + (lambda * Theta);
+X_grad = X_grad + (lambda * X);
 
 % =============================================================
 

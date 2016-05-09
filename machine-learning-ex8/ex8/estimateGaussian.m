@@ -21,14 +21,10 @@ sigma2 = zeros(n, 1);
 %               should contain variance of the i-th feature.
 %
 
-
-
-
-
-
-
-
-
+% mean of X in dim 1
+mu = mean(X,1);
+% variance - std^2 of X with weight 1 (N instead of N-1) and in dim 1
+sigma2 = std(X,1,1) .^ 2;
 
 % =============================================================
 
